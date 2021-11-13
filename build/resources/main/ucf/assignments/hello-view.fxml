@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<VBox maxHeight="632.0" maxWidth="992.0" minHeight="632.0" minWidth="992.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ucf.assignments.HelloController">
+   <MenuBar>
+     <menus>
+       <Menu mnemonicParsing="false" text="Load" />
+         <Menu mnemonicParsing="false" text="Save">
+            <items>
+               <MenuItem mnemonicParsing="false" text="Currently Selected List" />
+               <MenuItem mnemonicParsing="false" text="All Lists" />
+            </items>
+         </Menu>
+     </menus>
+   </MenuBar>
+   <VBox>
+      <children>
+      
+          <Label fx:id="welcomeText" text="To-Do List App">
+            <VBox.margin>
+               <Insets />
+            </VBox.margin>
+            <font>
+               <Font size="32.0" />
+            </font>
+         </Label>
+         <Label fx:id="welcomeText1" text="by Merrek DeBolt" />
+         <Separator prefWidth="952.0">
+            <padding>
+               <Insets top="10.0" />
+            </padding>
+         </Separator>
+         <HBox>
+            <children>
+               <VBox>
+                  <children>
+                     <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="470.0" prefWidth="300.0" VBox.vgrow="ALWAYS">
+                        <content>
+                           <ListView fx:id="todoListView" editable="true" onMouseClicked="#toDoListClick" />
+                        </content>
+                     </ScrollPane>
+                     <HBox alignment="CENTER" spacing="10.0">
+                        <children>
+                            <Button onAction="#onAddListClick" prefWidth="93.0" text="ADD" HBox.hgrow="ALWAYS" />
+                           <Button onAction="#toDoListClick" prefWidth="93.0" text="DELETE" HBox.hgrow="ALWAYS" />
+                        </children>
+                        <padding>
+                           <Insets top="10.0" />
+                        </padding>
+                     </HBox>
+                  </children>
+               </VBox>
+               <Separator orientation="VERTICAL" prefHeight="200.0">
+                  <padding>
+                     <Insets left="10.0" />
+                  </padding>
+               </Separator>
+               <VBox layoutX="10.0" layoutY="10.0">
+                  <children>
+                     <Label fx:id="welcomeText11" text="Title">
+                        <font>
+                           <Font size="16.0" />
+                        </font>
+                     </Label>
+                     <TextField fx:id="titleBox" onKeyTyped="#onTitleBoxChanged" />
+                     <Label fx:id="welcomeText111" layoutX="20.0" layoutY="10.0" text="Items">
+                        <font>
+                           <Font size="16.0" />
+                        </font>
+                     </Label>
+                     <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="320.0" prefWidth="300.0">
+                        <content>
+                           <ListView fx:id="itemsListView" onMouseClicked="#itemListClick" />
+                        </content>
+                     </ScrollPane>
+                     <HBox alignment="TOP_CENTER" layoutX="20.0" layoutY="310.0">
+                        <children>
+                           <CheckBox mnemonicParsing="false" text="Sort by Due Date" />
+                        </children>
+                        <padding>
+                           <Insets top="10.0" />
+                        </padding>
+                     </HBox>
+                     <HBox alignment="CENTER" layoutX="20.0" layoutY="410.0" prefHeight="70.0" spacing="10.0">
+                        <children>
+                           <Button onAction="#showAll" prefHeight="70.0" prefWidth="93.0" text="SHOW ALL" textAlignment="CENTER" wrapText="true" />
+                           <Button onAction="#showChecked" prefHeight="70.0" prefWidth="93.0" text="SHOW CHECKED" textAlignment="CENTER" wrapText="true" />
+                           <Button onAction="#showUnchecked" prefHeight="70.0" prefWidth="93.0" text="SHOW UNCHECKED" textAlignment="CENTER" wrapText="true" />
+                        </children>
+                        <padding>
+                           <Insets top="10.0" />
+                        </padding>
+                     </HBox>
+                     <HBox alignment="CENTER" spacing="10.0">
+                        <children>
+                           <Button onAction="#onAddItemClick" prefWidth="145.0" text="ADD" />
+                           <Button onAction="#toDoListClick" prefWidth="145.0" text="DELETE" />
+                        </children>
+                        <padding>
+                           <Insets top="10.0" />
+                        </padding>
+                     </HBox>
+                  </children>
+                  <padding>
+                     <Insets left="10.0" />
+                  </padding>
+               </VBox>
+               <Separator layoutX="310.0" layoutY="20.0" orientation="VERTICAL" prefHeight="200.0">
+                  <padding>
+                     <Insets left="10.0" />
+                  </padding>
+               </Separator>
+               <VBox alignment="TOP_CENTER" layoutX="326.0" layoutY="20.0" spacing="10.0">
+                  <children>
+                     <HBox>
+                        <children>
+                           <Label fx:id="welcomeText111" text="Description">
+                              <font>
+                                 <Font size="16.0" />
+                              </font>
+                           </Label>
+                        </children>
+                     </HBox>
+                     <TextArea fx:id="descBox" onKeyTyped="#onDescBoxChanged" prefHeight="200.0" prefWidth="200.0" />
+                     <HBox layoutX="20.0" layoutY="10.0">
+                        <children>
+                           <Label fx:id="welcomeText1112" text="Due Date">
+                              <font>
+                                 <Font size="16.0" />
+                              </font>
+                           </Label>
+                        </children>
+                     </HBox>
+                     <DatePicker fx:id="datePicker" prefWidth="300.0" />
+                     <VBox alignment="CENTER" prefHeight="145.0" prefWidth="100.0">
+                        <children>
+                           <CheckBox fx:id="completeCheckBox" mnemonicParsing="false" onMouseClicked="#onCompleteCheck" text="Complete?">
+                              <font>
+                                 <Font size="24.0" />
+                              </font>
+                           </CheckBox>
+                        </children>
+                     </VBox>
+                  </children>
+                  <padding>
+                     <Insets left="10.0" />
+                  </padding>
+               </VBox>
+            </children>
+            <padding>
+               <Insets top="10.0" />
+            </padding>
+         </HBox>
+      </children>
+      <padding>
+         <Insets bottom="20.0" left="20.0" right="20.0" top="10.0" />
+      </padding>
+   </VBox>
+</VBox>

@@ -1,0 +1,206 @@
+public class HelloApplication extends Application
+{
+    @Override
+    public void start(Stage stage) throws IOException
+    {
+        Prepares the GUI to be launched
+    }
+
+    public static void main(String[] args)
+    {
+        Launches the GUI
+    }
+}
+
+public class HelloController {
+
+    Variables for:
+        - Complete? CheckBox
+        - To-Do Lists ListView
+        - Items ListView
+        - DueDate DatePicker
+        - Title TextField
+        - Description TextArea
+        - ToDoList ArrayList
+        - Integers for CurrentListIndex and CurrentItemIndex
+
+    @FXML
+    protected void initialize()
+    {
+        - Initialize both Index integers
+        - Fill out To-Do List ListView
+
+        - Initialize DatePicker ValueChanged event to update Date of Items in real time
+    }
+
+    private void refreshToDoList()
+    {
+        Add all to-do lists to ToDoList ListView
+    }
+
+    private void refreshItems()
+    {
+        Add all items from the selected ToDoList to Item ListView
+        If sortCheck is Checked, sort the ListView
+    }
+
+    @FXML protected void toDoListClick()
+    {
+        - Set TitleBox text to ToDoList Title
+        - Set CurrentListIndex to Selected List
+        - Fill Item ListView with Items from selected ToDoList
+    }
+
+    @FXML protected void onAddListClick()
+    {
+        - Create a new ToDoList object and add it to the ArrayList of ToDoList objects
+        - Refresh ToDoList ListView
+    }
+
+    @FXML protected void onDeleteListClick()
+    {
+        - Delete the Item object from the ArrayList of Item objects from the current ToDoList with CurrentItemIndex
+        refreshToDoList();
+    }
+
+    @FXML protected void itemListClick()
+    {
+        - Get the currently selected Item from ItemListView
+        - Set the Description TextArea with the current Item's Description
+        - Set the DueDate DatePicker with the current Item's DueDate
+        - Set the Complete CheckBox with the current Item's Checked
+        - Set CurrentItemIndex to ItemListView SelectedIndex
+    }
+
+    @FXML protected void onTitleBoxChanged()
+    {
+        - Set the current ToDoList's Title to what's in the TitleBox
+        refreshToDoList();
+    }
+
+    @FXML protected void onDescBoxChanged()
+    {
+        - Set the current Item's Description to what's in the DescBox
+        refreshItems();
+    }
+
+    @FXML protected void onCompleteCheck()
+    {
+        - Set the current Item's Complete to what's in the CompleteCheck
+        refreshItems();
+    }
+
+    @FXML protected void onSortCheck()
+    {
+        refreshItems();
+    }
+
+    @FXML protected void onAddItemClick()
+    {
+        - Create a new Item object
+        - Add it to the ArrayList of Item objects in the current ToDoList
+        - Refresh Item ListView
+    }
+
+    @FXML protected void onDeleteItemClick()
+    {
+        - Delete the Item object from the ArrayList of Item objects from the current ToDoList with CurrentItemIndex
+        refreshItems();
+    }
+
+    @FXML protected void showAll()
+    {
+        refreshItems();
+    }
+    @FXML protected void showChecked()
+    {
+        - Get a copy of the currently selected ToDoList
+        - Make an ObservableList of Item
+        - Go through all the Items in the ToDoList, and add the item to the ObservableList if it's Checked
+        - Set the content of the ItemListView to the ObservableList
+    }
+    @FXML protected void showUnchecked()
+    {
+        - Get a copy of the currently selected ToDoList
+        - Make an ObservableList of Item
+        - Go through all the Items in the ToDoList, and add the item to the ObservableList if it's not Checked
+        - Set the content of the ItemListView to the ObservableList
+    }
+
+    @FXML protected void onClickSaveList()
+    {
+        - Open a FileChooser and let the user choose where they want to save the list
+        saveList(currentlySelectedList, pathChosen);
+    }
+    @FXML protected void onClickSaveLists()
+    {
+        - Open a FileChooser and let the user choose the folder they want to save their lists
+        - Make a folder in that path
+        - For loop that calls saveList for every list in ToDoList ArrayList
+    }
+    private void saveList(ToDoList toDoList, String path)
+    {
+        - While loop that checks if the file already exists.
+            - If it does, add an indexed number to the file name
+        - Saves toDoList to path
+    }
+
+    @FXML protected void onClickLoadList()
+    {
+        - Open a FileChooser and let the user choose text files they want to load
+        - For loop that creates ToDoList objects and adds them to ToDoList ArrayList
+        refreshToDoList();
+    }
+}
+
+public class ToDoList
+{
+    - String for Title
+    - ArrayList of Item objects
+
+    @Override
+    public String toString()
+    {
+        return Title;
+    }
+
+    public ToDoList()
+    {
+        Initializes ArrayList of Item
+    }
+}
+
+public class Item {
+
+    - String for Description
+    - LocalDate for DueDate
+    - boolean for Checked
+
+    @Override
+    public String toString()
+    {
+        return Description;
+    }
+}
+
+// JUNITS
+01. check to see if the ToDoList ListView can hold 100 objects
+02. check to see if a ToDoList has a Title
+03. check to see if a ToDoList has 100 items
+04. Check to see if an Item has a description
+05. Check to see if an Item has a DueDate
+06. Prove that the ToDoList ListView is empty, then add a ToDoList to it then prove it's in there
+07. Prove that the ToDoList ListView has one item, then remove the item, then prove ListView is empty.
+08. Check to see if the Title of a ToDoList is "List1". Change it. Then check to see if it's the desired value
+09. Check to see if the size of Items in a ToDoList is 0. Add an item. Then check to see if the size is 1.
+10. Check to see if the size of Items in a ToDoList is 1. Remove the item. Then check to see if the size is 0.
+11. Set an Item's Description, then prove it's equal to the desired Description
+12. Set an Item's DueDate, then prove it's equal to the desired DueDate
+13. Prove that the Item Checked is false, then check it, then prove it's true
+14. fill ToDoList ListView and make sure it's not empty
+15. go through all items in the listview and check if they're checked
+16. go through all items in the listview and check if they're not checked
+17. save a list and check if the file exists
+18. save all lists and check the files exist
+19. Prove that the ToDoList ListView is empty, then add a ToDoList to it then prove it's in there
+20. Prove that the ToDoList ListView is empty, then add ToDoList's to it then prove they're in there

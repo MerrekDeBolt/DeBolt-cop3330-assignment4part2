@@ -1,0 +1,72 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+
+
+HelloApplication -> HelloController: Instantiates
+
+HelloController -> ToDoList: Instantiates
+ToDoList -> HelloController: Uses
+
+ToDoList -> Item: Instantiates
+Item -> ToDoList: Uses
+
+class HelloApplication
+{
+    public void start(Stage stage) throws IOException
+    public static void main(String[] args)
+}
+
+class HelloController
+{
+    @FXML private Label welcomeText;
+    @FXML private CheckBox completeCheckBox;
+    @FXML private CheckBox sortCheckBox;
+    @FXML private ListView todoListView;
+    @FXML private ListView itemsListView;
+    @FXML private DatePicker datePicker;
+    @FXML private TextField titleBox;
+    @FXML private TextArea descBox;
+
+    ArrayList<ToDoList> toDoLists;
+    int currentListIndex;
+    int currentItemIndex;
+
+    @FXML protected void initialize()
+    private void refreshToDoList()
+    private void refreshItems()
+    @FXML protected void toDoListClick()
+    @FXML protected void onAddListClick()
+    @FXML protected void onDeleteListClick()
+    @FXML protected void itemListClick()
+    @FXML protected void onTitleBoxChanged()
+    @FXML protected void onDescBoxChanged()
+    @FXML protected void onCompleteCheck()
+    @FXML protected void onAddItemClick()
+    @FXML protected void onDeleteItemClick()
+    @FXML protected void showAll()
+    @FXML protected void showChecked()
+    @FXML protected void showUnchecked()
+    @FXML protected void saveList()
+    @FXML protected void saveAllLists()
+    @FXML protected void loadList()
+}
+
+class ToDoList
+{
+    public String Name;
+    public ArrayList<Item> Items;
+
+    @Override public String toString()
+    public ToDoList()
+}
+
+class Item
+{
+    public String Description;
+    public LocalDate DueDate;
+    public boolean Checked;
+
+    @Override public String toString()
+}
+@enduml
