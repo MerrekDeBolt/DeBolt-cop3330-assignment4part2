@@ -12,16 +12,16 @@
             <items>
                <MenuItem mnemonicParsing="false" text="Load from File" />
                <MenuItem mnemonicParsing="false" text="Save to File" />
+               <MenuItem mnemonicParsing="false" onAction="#onClearClick" text="Clear List" />
             </items>
          </Menu>
          <Menu mnemonicParsing="false" text="View...">
             <items>
-               <MenuItem mnemonicParsing="false" text="Show All" />
-               <MenuItem mnemonicParsing="false" text="Show Completed" />
-               <MenuItem mnemonicParsing="false" text="Show Incompleted" />
+               <MenuItem mnemonicParsing="false" onAction="#showAll" text="Show All" />
+               <MenuItem mnemonicParsing="false" onAction="#showChecked" text="Show Completed" />
+               <MenuItem mnemonicParsing="false" onAction="#showUnchecked" text="Show Incompleted" />
             </items>
          </Menu>
-       <Menu mnemonicParsing="false" text="Clear" />
      </menus>
    </MenuBar>
    <VBox>

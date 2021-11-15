@@ -23,7 +23,7 @@ public class HelloController {
 
     ObservableList<Item> items = FXCollections.observableArrayList();
 
-    int currentItemIndex = -1;
+    // int currentItemIndex = -1;
 
     @FXML
     protected void initialize()
@@ -34,7 +34,7 @@ public class HelloController {
         deleteColumn.setCellValueFactory(new PropertyValueFactory<Item, Button>("DeleteButton"));
 
         tableView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-            currentItemIndex = tableView.getSelectionModel().selectedIndexProperty().getValue();
+            // currentItemIndex = tableView.getSelectionModel().selectedIndexProperty().getValue();
             focusItem();
         });
 
@@ -45,20 +45,27 @@ public class HelloController {
 
         datePicker.valueProperty().addListener((observable, oldDate, newDate)->
         {
-            items.get(currentItemIndex).dueDate = datePicker.getValue();
+            // items.get(currentItemIndex).dueDate = datePicker.getValue();
+            items.get(tableView.getSelectionModel().getSelectedIndex()).dueDate = datePicker.getValue();
             refreshItems();
         });
     }
 
-    private void refreshItems()
+    public void refreshItems()
     {
         tableView.setItems(items);
         tableView.refresh();
     }
 
+    public void deleteItem(Item item)
+    {
+        items.remove(item);
+    }
+
     @FXML protected void focusItem()
     {
-        Item selectedItem = items.get(currentItemIndex);
+        // Item selectedItem = items.get(currentItemIndex);
+        Item selectedItem = (Item) tableView.getSelectionModel().getSelectedItem();
 
         // Set description
         // descBox.setText(selectedItem.description.getValue());
@@ -69,36 +76,36 @@ public class HelloController {
 
         // Set check box
         completeCheckBox.setSelected(selectedItem.checked);
+    }
 
+    public void clearFocus()
+    {
+        if (tableView.getSelectionModel().getSelectedItem() == null)
+        {
+            descBox.setText("");
+            datePicker.setValue(LocalDate.now());
+            completeCheckBox.setSelected(false);
+        }
     }
 
     @FXML protected void onDescBoxChanged()
     {
-        // items.get(currentItemIndex).description.setValue(descBox.getText());
-        items.get(currentItemIndex).description = descBox.getText();
+        // items.get(currentItemIndex).description = descBox.getText();
+        items.get(tableView.getSelectionModel().getSelectedIndex()).description = descBox.getText();
         refreshItems();
     }
 
     @FXML protected void onCompleteCheck()
     {
-        items.get(currentItemIndex).checked = completeCheckBox.isSelected();
+        // items.get(currentItemIndex).checked = completeCheckBox.isSelected();
+        items.get(tableView.getSelectionModel().getSelectedIndex()).checked = completeCheckBox.isSelected();
         refreshItems();
     }
 
     @FXML protected void onAddItemClick()
     {
-        Item item = new Item();
-        // item.Description.setValue("New Item");
-        item.dueDate = LocalDate.now();
-        item.checked = false;
-
+        Item item = new Item(this);
         items.add(item);
-
-        refreshItems();
-    }
-
-    @FXML protected void onDeleteItemClick()
-    {
         refreshItems();
     }
 
@@ -123,5 +130,12 @@ public class HelloController {
                 content.add(items.get(index));
 
         tableView.setItems(content);
+    }
+
+    @FXML protected void onClearClick()
+    {
+        System.out.println("Cleared");
+        items.clear();
+        refreshItems();
     }
 }
