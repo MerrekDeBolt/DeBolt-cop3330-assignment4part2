@@ -20,7 +20,7 @@ import java.util.List;
 public class HelloController {
 
     @FXML private Label welcomeText;
-    @FXML private TableView tableView;
+    @FXML public TableView tableView;
     @FXML private TableColumn doneColumn;
     @FXML private TableColumn descColumn;
     @FXML private TableColumn dueDateColumn;
@@ -44,7 +44,6 @@ public class HelloController {
         deleteColumn.setCellValueFactory(new PropertyValueFactory<Item, Button>("DeleteButton"));
 
         tableView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-            // currentItemIndex = tableView.getSelectionModel().selectedIndexProperty().getValue();
             focusItem();
         });
 
@@ -55,10 +54,22 @@ public class HelloController {
 
         datePicker.valueProperty().addListener((observable, oldDate, newDate)->
         {
-            // items.get(currentItemIndex).dueDate = datePicker.getValue();
             items.get(tableView.getSelectionModel().getSelectedIndex()).dueDate = datePicker.getValue();
             refreshItems();
         });
+
+        // Temporary test
+        /*
+        Item item;
+        for (int index = 0; index < 100; index++)
+        {
+            item = new Item(this);
+            if (index % 2 == 0)
+                item.checked = true;
+            items.add(item);
+        }
+        refreshItems();
+        */
     }
 
     public void refreshItems()
@@ -78,7 +89,6 @@ public class HelloController {
         Item selectedItem = (Item) tableView.getSelectionModel().getSelectedItem();
 
         // Set description
-        // descBox.setText(selectedItem.description.getValue());
         descBox.setText(selectedItem.description);
 
         // Set due date
@@ -100,7 +110,6 @@ public class HelloController {
 
     @FXML protected void onDescBoxChanged()
     {
-        // items.get(currentItemIndex).description = descBox.getText();
         if (descBox.getText().length() > 256)
         {
             descBox.setText(descBox.getText().substring(0, 256));
@@ -113,7 +122,6 @@ public class HelloController {
 
     @FXML protected void onCompleteCheck()
     {
-        // items.get(currentItemIndex).checked = completeCheckBox.isSelected();
         items.get(tableView.getSelectionModel().getSelectedIndex()).checked = completeCheckBox.isSelected();
         refreshItems();
     }
@@ -122,37 +130,40 @@ public class HelloController {
     {
         Item item = new Item(this);
         items.add(item);
-        refreshItems();
+        try { refreshItems(); } catch (Exception ex) { }
     }
 
     @FXML protected void showAll()
     {
         refreshItems();
     }
-    @FXML protected void showChecked()
+    @FXML protected ObservableList<Item> showChecked()
     {
         ObservableList<Item> content = FXCollections.observableArrayList();
         for (int index = 0; index < items.size(); index++)
             if (items.get(index).checked)
                 content.add(items.get(index));
 
-        tableView.setItems(content);
+        try { tableView.setItems(content); } catch (Exception ex) { }
+
+        return content;
     }
-    @FXML protected void showUnchecked()
+    @FXML protected ObservableList<Item> showUnchecked()
     {
         ObservableList<Item> content = FXCollections.observableArrayList();
         for (int index = 0; index < items.size(); index++)
             if (!items.get(index).checked)
                 content.add(items.get(index));
 
-        tableView.setItems(content);
+        try { tableView.setItems(content); } catch (Exception ex) { }
+
+        return content;
     }
 
     @FXML protected void onClearClick()
     {
-        System.out.println("Cleared");
         items.clear();
-        refreshItems();
+        try { refreshItems(); } catch (Exception ex) { }
     }
 
     @FXML protected void onLoadClick()
@@ -169,12 +180,18 @@ public class HelloController {
 
     void loadList(String path)
     {
+        addItemsFromList(path);
+        refreshItems();
+    }
+
+    public void addItemsFromList(String path)
+    {
         List<String> lines;
         try { lines = Files.readAllLines(Paths.get(path), StandardCharsets.US_ASCII); }
         catch (Exception e) { System.out.println("File not found."); return; }
-
         Item item;
         String line;
+        ArrayList<Item> newItems = new ArrayList<>();
         for (int i = 0; i < lines.size(); i++)
         {
             item = new Item(this);
@@ -196,26 +213,11 @@ public class HelloController {
 
             items.add(item);
         }
-
-        refreshItems();
     }
 
     @FXML protected void onSaveClick()
     {
-        String content = "";
-        for (int index = 0; index < items.size(); index++)
-        {
-            content += items.get(index).description;
-            content += ";";
-
-            content += items.get(index).dueDate.toString();
-            content += ";";
-
-            content += items.get(index).checked;
-
-            if (index != items.size() - 1)
-                content += "\n";
-        }
+        String content = createContent();
 
         FileChooser fileChooser = new FileChooser();
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("TXT files (*.txt)", "*.txt");
@@ -232,8 +234,22 @@ public class HelloController {
         writer.close();
     }
 
-    @FXML protected void onHelpClick()
+    public String createContent()
     {
-        System.out.println("Help time");
+        String content = "";
+        for (int index = 0; index < items.size(); index++)
+        {
+            content += items.get(index).description;
+            content += ";";
+
+            content += items.get(index).dueDate.toString();
+            content += ";";
+
+            content += items.get(index).checked;
+
+            if (index != items.size() - 1)
+                content += "\n";
+        }
+        return content;
     }
 }

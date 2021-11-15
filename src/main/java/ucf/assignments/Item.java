@@ -29,7 +29,7 @@ public class Item {
         dueDate = LocalDate.now();
         checked = false;
 
-        deleteButton = new Button();
+        // deleteButton = new Button();
     }
 
     public CheckBox getChecked()
