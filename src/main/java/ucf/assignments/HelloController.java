@@ -4,6 +4,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -11,14 +12,16 @@ import java.util.ArrayList;
 public class HelloController {
 
     @FXML private Label welcomeText;
+    @FXML private TableView tableView;
+    @FXML private TableColumn doneColumn;
+    @FXML private TableColumn descColumn;
+    @FXML private TableColumn dueDateColumn;
+    @FXML private TableColumn deleteColumn;
     @FXML private CheckBox completeCheckBox;
-    @FXML private ListView todoListView;
-    @FXML private ListView itemsListView;
     @FXML private DatePicker datePicker;
-    @FXML private TextField titleBox;
     @FXML private TextArea descBox;
 
-    ArrayList<ToDoList> toDoLists = new ArrayList<>();
+    ArrayList<Item> items = new ArrayList<>();
 
     int currentListIndex;
     int currentItemIndex;
@@ -29,67 +32,34 @@ public class HelloController {
         currentListIndex = -1;
         currentItemIndex = -1;
 
-        refreshToDoList();
+        // doneColumn.setCellValueFactory(new PropertyValueFactory<Item, boolean>("Checked"));
+        descColumn.setCellValueFactory(new PropertyValueFactory<Item, String>("Description"));
+        dueDateColumn.setCellValueFactory(new PropertyValueFactory<Item, LocalDate>("DueDate"));
+        deleteColumn.setCellValueFactory(new PropertyValueFactory<Item, Button>("DeleteButton"));
 
         datePicker.valueProperty().addListener((observable, oldDate, newDate)->
         {
-            toDoLists.get(currentListIndex).Items.get(currentItemIndex).DueDate = datePicker.getValue();
+            items.get(currentItemIndex).DueDate = datePicker.getValue();
             refreshItems();
-            welcomeText.setText(toDoLists.get(currentListIndex).Items.get(currentItemIndex).DueDate.toString());
+            welcomeText.setText(items.get(currentItemIndex).DueDate.toString());
         });
-    }
-
-    private void refreshToDoList()
-    {
-        ObservableList<ToDoList> content = FXCollections.observableArrayList();
-        for (int index = 0; index < toDoLists.size(); index++)
-            content.add(toDoLists.get(index));
-
-        todoListView.setItems(content);
     }
 
     private void refreshItems()
     {
         ObservableList<Item> content = FXCollections.observableArrayList();
-        for (int index = 0; index < toDoLists.get(currentListIndex).Items.size(); index++)
-            content.add(toDoLists.get(currentListIndex).Items.get(index));
+        for (int index = 0; index < items.size(); index++)
+            content.add(items.get(index));
 
-        itemsListView.setItems(content);
-    }
-
-    @FXML protected void toDoListClick()
-    {
-        ToDoList selectedList = (ToDoList) todoListView.getSelectionModel().getSelectedItem();
-
-        // Set title
-        titleBox.setText(selectedList.Name);
-
-        // Fills ListView with Items
-        currentListIndex = todoListView.getSelectionModel().getSelectedIndex();
-        refreshItems();
-    }
-
-    @FXML protected void onAddListClick()
-    {
-        ToDoList list = new ToDoList();
-        list.Name = "New List";
-        toDoLists.add(list);
-
-        refreshToDoList();
-    }
-
-    @FXML protected void onDeleteListClick()
-    {
-
-        refreshToDoList();
+        tableView.setItems(content);
     }
 
     @FXML protected void itemListClick()
     {
-        Item selectedItem = (Item) itemsListView.getSelectionModel().getSelectedItem();
+        Item selectedItem = (Item) tableView.getSelectionModel().getSelectedItem();
 
         // Set description
-        descBox.setText(selectedItem.Description);
+        descBox.setText(selectedItem.Description.getValue());
 
         // Set due date
         datePicker.setValue(selectedItem.DueDate);
@@ -97,43 +67,36 @@ public class HelloController {
         // Set check box
         completeCheckBox.setSelected(selectedItem.Checked);
 
-        currentItemIndex = itemsListView.getSelectionModel().getSelectedIndex();
+        currentItemIndex = tableView.getSelectionModel().getSelectedIndex();
         // refreshItems();
-    }
-
-    @FXML protected void onTitleBoxChanged()
-    {
-        toDoLists.get(currentListIndex).Name = titleBox.getText();
-        refreshToDoList();
     }
 
     @FXML protected void onDescBoxChanged()
     {
-        toDoLists.get(currentListIndex).Items.get(currentItemIndex).Description = descBox.getText();
+        items.get(currentItemIndex).Description.setValue(descBox.getText());
         refreshItems();
     }
 
     @FXML protected void onCompleteCheck()
     {
-        toDoLists.get(currentListIndex).Items.get(currentItemIndex).Checked = completeCheckBox.isSelected();
+        items.get(currentItemIndex).Checked = completeCheckBox.isSelected();
         refreshItems();
     }
 
     @FXML protected void onAddItemClick()
     {
         Item item = new Item();
-        item.Description = "New Item";
+        // item.Description.setValue("New Item");
         item.DueDate = LocalDate.now();
         item.Checked = false;
 
-        toDoLists.get(currentListIndex).Items.add(item);
+        items.add(item);
 
         refreshItems();
     }
 
     @FXML protected void onDeleteItemClick()
     {
-
         refreshItems();
     }
 
@@ -143,24 +106,20 @@ public class HelloController {
     }
     @FXML protected void showChecked()
     {
-        ToDoList tempList = (ToDoList) todoListView.getSelectionModel().getSelectedItem();
-
         ObservableList<Item> content = FXCollections.observableArrayList();
-        for (int index = 0; index < tempList.Items.size(); index++)
-            if (tempList.Items.get(index).Checked)
-                content.add(tempList.Items.get(index));
+        for (int index = 0; index < items.size(); index++)
+            if (items.get(index).Checked)
+                content.add(items.get(index));
 
-        itemsListView.setItems(content);
+        tableView.setItems(content);
     }
     @FXML protected void showUnchecked()
     {
-        ToDoList tempList = (ToDoList) todoListView.getSelectionModel().getSelectedItem();
-
         ObservableList<Item> content = FXCollections.observableArrayList();
-        for (int index = 0; index < tempList.Items.size(); index++)
-            if (!tempList.Items.get(index).Checked)
-                content.add(tempList.Items.get(index));
+        for (int index = 0; index < items.size(); index++)
+            if (!items.get(index).Checked)
+                content.add(items.get(index));
 
-        itemsListView.setItems(content);
+        tableView.setItems(content);
     }
 }
