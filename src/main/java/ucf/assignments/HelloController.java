@@ -33,6 +33,8 @@ public class HelloController {
 
     // int currentItemIndex = -1;
 
+    int newItemNum = 1;
+
     @FXML
     protected void initialize()
     {
@@ -99,6 +101,12 @@ public class HelloController {
     @FXML protected void onDescBoxChanged()
     {
         // items.get(currentItemIndex).description = descBox.getText();
+        if (descBox.getText().length() > 256)
+        {
+            descBox.setText(descBox.getText().substring(0, 256));
+            welcomeText.requestFocus();
+        }
+
         items.get(tableView.getSelectionModel().getSelectedIndex()).description = descBox.getText();
         refreshItems();
     }
@@ -183,6 +191,9 @@ public class HelloController {
             else if (line.equals("true"))
                 item.checked = true;
 
+            if (item.description.length() > 256)
+                item.description = item.description.substring(0, 256);
+
             items.add(item);
         }
 
@@ -219,5 +230,10 @@ public class HelloController {
 
         writer.println(content);
         writer.close();
+    }
+
+    @FXML protected void onHelpClick()
+    {
+        System.out.println("Help time");
     }
 }

@@ -8,7 +8,7 @@
 <VBox maxHeight="632.0" maxWidth="992.0" minHeight="632.0" minWidth="992.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ucf.assignments.HelloController">
    <MenuBar>
      <menus>
-         <Menu mnemonicParsing="false" text="File">
+         <Menu mnemonicParsing="false" text="File...">
             <items>
                <MenuItem mnemonicParsing="false" onAction="#onLoadClick" text="Load from File" />
                <MenuItem mnemonicParsing="false" onAction="#onSaveClick" text="Save to File" />
@@ -20,6 +20,11 @@
                <MenuItem mnemonicParsing="false" onAction="#showAll" text="Show All" />
                <MenuItem mnemonicParsing="false" onAction="#showChecked" text="Show Completed" />
                <MenuItem mnemonicParsing="false" onAction="#showUnchecked" text="Show Incompleted" />
+            </items>
+         </Menu>
+         <Menu mnemonicParsing="false" text="Help">
+            <items>
+               <MenuItem mnemonicParsing="false" onAction="#onHelpClick" text="Show Help" />
             </items>
          </Menu>
      </menus>
@@ -82,7 +87,7 @@
                            </Label>
                         </children>
                      </HBox>
-                     <TextArea fx:id="descBox" onKeyTyped="#onDescBoxChanged" prefHeight="200.0" prefWidth="200.0" />
+                     <TextArea fx:id="descBox" onKeyTyped="#onDescBoxChanged" prefHeight="200.0" prefWidth="200.0" wrapText="true" />
                      <HBox layoutX="20.0" layoutY="10.0">
                         <children>
                            <Label fx:id="welcomeText1112" text="Due Date">

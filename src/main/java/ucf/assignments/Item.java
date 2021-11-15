@@ -23,7 +23,9 @@ public class Item {
     {
         this.controller = controller;
 
-        description = "New Item";
+        description = "New Item " + controller.newItemNum;
+        controller.newItemNum++;
+
         dueDate = LocalDate.now();
         checked = false;
 
