@@ -5,9 +5,17 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
+import java.io.File;
+import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 
 public class HelloController {
 
@@ -137,5 +145,79 @@ public class HelloController {
         System.out.println("Cleared");
         items.clear();
         refreshItems();
+    }
+
+    @FXML protected void onLoadClick()
+    {
+        FileChooser fileChooser = new FileChooser();
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("TXT files (*.txt)", "*.txt");
+        fileChooser.getExtensionFilters().add(extFilter);
+
+        Stage mainStage = new Stage();
+        File selectedFile = fileChooser.showOpenDialog(mainStage);
+
+        loadList(selectedFile.getPath());
+    }
+
+    void loadList(String path)
+    {
+        List<String> lines;
+        try { lines = Files.readAllLines(Paths.get(path), StandardCharsets.US_ASCII); }
+        catch (Exception e) { System.out.println("File not found."); return; }
+
+        Item item;
+        String line;
+        for (int i = 0; i < lines.size(); i++)
+        {
+            item = new Item(this);
+            line = lines.get(i);
+
+            item.description = line.substring(0, line.indexOf(";"));
+            line = line.substring(line.indexOf(";") + 1);
+
+            item.dueDate = LocalDate.parse(line.substring(0, line.indexOf(";")));
+            line = line.substring(line.indexOf(";") + 1);
+
+            if (line.equals("false"))
+                item.checked = false;
+            else if (line.equals("true"))
+                item.checked = true;
+
+            items.add(item);
+        }
+
+        refreshItems();
+    }
+
+    @FXML protected void onSaveClick()
+    {
+        String content = "";
+        for (int index = 0; index < items.size(); index++)
+        {
+            content += items.get(index).description;
+            content += ";";
+
+            content += items.get(index).dueDate.toString();
+            content += ";";
+
+            content += items.get(index).checked;
+
+            if (index != items.size() - 1)
+                content += "\n";
+        }
+
+        FileChooser fileChooser = new FileChooser();
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("TXT files (*.txt)", "*.txt");
+        fileChooser.getExtensionFilters().add(extFilter);
+
+        Stage mainStage = new Stage();
+        File selectedFile = fileChooser.showSaveDialog(mainStage);
+
+        PrintWriter writer;
+        try { writer = new PrintWriter(selectedFile); }
+        catch (Exception e) { System.out.println("File not found."); return; }
+
+        writer.println(content);
+        writer.close();
     }
 }
