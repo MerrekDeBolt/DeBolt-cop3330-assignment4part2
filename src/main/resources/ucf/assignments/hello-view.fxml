@@ -24,7 +24,7 @@
          </Menu>
      </menus>
    </MenuBar>
-   <VBox>
+   <VBox prefWidth="960.0">
       <children>
       
           <Label fx:id="welcomeText" text="To-Do List App">
