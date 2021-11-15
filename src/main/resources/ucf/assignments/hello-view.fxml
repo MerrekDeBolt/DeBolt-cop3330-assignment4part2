@@ -50,7 +50,7 @@
                            <TableView fx:id="tableView">
                              <columns>
                                <TableColumn fx:id="doneColumn" prefWidth="75.0" text="Done?" />
-                               <TableColumn fx:id="descColumn" prefWidth="75.0" text="Description" />
+                               <TableColumn fx:id="descColumn" prefWidth="350.0" text="Description" />
                                  <TableColumn fx:id="dueDateColumn" prefWidth="75.0" text="Due Date" />
                                  <TableColumn fx:id="deleteColumn" prefWidth="75.0" text="Delete" />
                              </columns>

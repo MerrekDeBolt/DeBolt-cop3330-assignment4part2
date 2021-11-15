@@ -21,65 +21,67 @@ public class HelloController {
     @FXML private DatePicker datePicker;
     @FXML private TextArea descBox;
 
-    ArrayList<Item> items = new ArrayList<>();
+    ObservableList<Item> items = FXCollections.observableArrayList();
 
-    int currentListIndex;
-    int currentItemIndex;
+    int currentItemIndex = -1;
 
     @FXML
     protected void initialize()
     {
-        currentListIndex = -1;
-        currentItemIndex = -1;
-
-        // doneColumn.setCellValueFactory(new PropertyValueFactory<Item, boolean>("Checked"));
+        doneColumn.setCellValueFactory(new PropertyValueFactory<Item, CheckBox>("Checked"));
         descColumn.setCellValueFactory(new PropertyValueFactory<Item, String>("Description"));
-        dueDateColumn.setCellValueFactory(new PropertyValueFactory<Item, LocalDate>("DueDate"));
+        dueDateColumn.setCellValueFactory(new PropertyValueFactory<Item, String>("DueDate"));
         deleteColumn.setCellValueFactory(new PropertyValueFactory<Item, Button>("DeleteButton"));
+
+        tableView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            currentItemIndex = tableView.getSelectionModel().selectedIndexProperty().getValue();
+            focusItem();
+        });
+
+        doneColumn.setStyle( "-fx-alignment: CENTER;");
+        descColumn.setStyle( "-fx-alignment: CENTER-LEFT;");
+        dueDateColumn.setStyle( "-fx-alignment: CENTER-LEFT;");
+        deleteColumn.setStyle( "-fx-alignment: CENTER;");
 
         datePicker.valueProperty().addListener((observable, oldDate, newDate)->
         {
-            items.get(currentItemIndex).DueDate = datePicker.getValue();
+            items.get(currentItemIndex).dueDate = datePicker.getValue();
             refreshItems();
-            welcomeText.setText(items.get(currentItemIndex).DueDate.toString());
         });
     }
 
     private void refreshItems()
     {
-        ObservableList<Item> content = FXCollections.observableArrayList();
-        for (int index = 0; index < items.size(); index++)
-            content.add(items.get(index));
-
-        tableView.setItems(content);
+        tableView.setItems(items);
+        tableView.refresh();
     }
 
-    @FXML protected void itemListClick()
+    @FXML protected void focusItem()
     {
-        Item selectedItem = (Item) tableView.getSelectionModel().getSelectedItem();
+        Item selectedItem = items.get(currentItemIndex);
 
         // Set description
-        descBox.setText(selectedItem.Description.getValue());
+        // descBox.setText(selectedItem.description.getValue());
+        descBox.setText(selectedItem.description);
 
         // Set due date
-        datePicker.setValue(selectedItem.DueDate);
+        datePicker.setValue(selectedItem.dueDate);
 
         // Set check box
-        completeCheckBox.setSelected(selectedItem.Checked);
+        completeCheckBox.setSelected(selectedItem.checked);
 
-        currentItemIndex = tableView.getSelectionModel().getSelectedIndex();
-        // refreshItems();
     }
 
     @FXML protected void onDescBoxChanged()
     {
-        items.get(currentItemIndex).Description.setValue(descBox.getText());
+        // items.get(currentItemIndex).description.setValue(descBox.getText());
+        items.get(currentItemIndex).description = descBox.getText();
         refreshItems();
     }
 
     @FXML protected void onCompleteCheck()
     {
-        items.get(currentItemIndex).Checked = completeCheckBox.isSelected();
+        items.get(currentItemIndex).checked = completeCheckBox.isSelected();
         refreshItems();
     }
 
@@ -87,8 +89,8 @@ public class HelloController {
     {
         Item item = new Item();
         // item.Description.setValue("New Item");
-        item.DueDate = LocalDate.now();
-        item.Checked = false;
+        item.dueDate = LocalDate.now();
+        item.checked = false;
 
         items.add(item);
 
@@ -108,7 +110,7 @@ public class HelloController {
     {
         ObservableList<Item> content = FXCollections.observableArrayList();
         for (int index = 0; index < items.size(); index++)
-            if (items.get(index).Checked)
+            if (items.get(index).checked)
                 content.add(items.get(index));
 
         tableView.setItems(content);
@@ -117,7 +119,7 @@ public class HelloController {
     {
         ObservableList<Item> content = FXCollections.observableArrayList();
         for (int index = 0; index < items.size(); index++)
-            if (!items.get(index).Checked)
+            if (!items.get(index).checked)
                 content.add(items.get(index));
 
         tableView.setItems(content);
